@@ -8,7 +8,7 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 3
+  - m_ConditionMode: 4
     m_ConditionEvent: MoveZ
     m_EventTreshold: -0.1
   m_DstStateMachine: {fileID: 0}
@@ -79,7 +79,7 @@ AnimatorStateMachine:
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 100, y: 200, z: 0}
+  m_AnyStatePosition: {x: 100, y: 110, z: 0}
   m_EntryPosition: {x: 100, y: 370, z: 0}
   m_ExitPosition: {x: 740, y: 200, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
@@ -460,7 +460,7 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 3
+  - m_ConditionMode: 4
     m_ConditionEvent: MoveZ
     m_EventTreshold: 0.1
   m_DstStateMachine: {fileID: 0}
