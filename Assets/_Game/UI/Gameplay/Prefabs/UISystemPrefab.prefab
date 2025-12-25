@@ -280,6 +280,7 @@ MonoBehaviour:
   _joystickHandle: {fileID: 4519637364277434137}
   _radius: 150
   _fireButton: {fileID: 237893849698748872}
+  _canvas: {fileID: 4857171901693019232}
 --- !u!1 &7538902553122112189
 GameObject:
   m_ObjectHideFlags: 0

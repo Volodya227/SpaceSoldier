@@ -1,8 +1,7 @@
-﻿using UIGameplay.Inputs;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace UIGameplay
+namespace UIGameplay.Inputs
 {
     public sealed class UIInputAdapter : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
