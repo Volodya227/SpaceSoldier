@@ -18,11 +18,11 @@ namespace Character
         private readonly CharacterMovement _movement;
         public CharacterController(CharacterConfig components, Rigidbody body)
         {
+            _body = body;
             _components = components;
             _state = new ContainerData.CharacterContainerData();
             _characterView = new ChatacterView(_state, _components.Controller, _components.Animation);
-            _movement = new CharacterMovement(_state.movementState);
-            _body = body;
+            _movement = new CharacterMovement(_state.movementState, _body);
         }
         public void Dispose()
         {
