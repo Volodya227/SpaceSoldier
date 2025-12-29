@@ -3,6 +3,12 @@ namespace Player.Inputs
 {
     public abstract class PlayerInput : MonoBehaviour
     {
+        protected readonly PlayerCharacterInput _characterInput = new();
+        protected readonly PlayerCameraViewInput _cameraViewInput = new();
+        public PlayerCharacterInput GetCharacterInput => _characterInput;
+        public PlayerCameraViewInput CameraViewInput => _cameraViewInput;
+
+
         protected UIGameplay.Inputs.IUIInputs _inputUI;
         private UIGameplay.Inputs.UIInputsNullReference _inputUINullRef = new();
         public bool Active { get; private set; } = false;
@@ -18,7 +24,9 @@ namespace Player.Inputs
         {
             _inputUI = (inputUI == null) ? _inputUINullRef : inputUI;
         }
-        protected readonly PlayerCharacterInput _characterInput = new();
-        public PlayerCharacterInput GetCharacterInput => _characterInput;
+        protected void SetCameraViewInput(float x, float y)
+        {
+            _cameraViewInput.SetXY(x, y);
+        }
     }
 }

@@ -7,16 +7,18 @@ namespace Player
         private PlayerController _player;
         private Character.CharacterSystem _characterSystem;
         private UIGameplay.UISystem _UI;
-        public void Init(Inputs.PlayerInput input, Character.CharacterSystem characterManager, UIGameplay.UISystem UI)
+        private CameraView.CameraView _cameraView;
+        public void Init(Inputs.PlayerInput input, Character.CharacterSystem characterManager, UIGameplay.UISystem UI, CameraView.CameraView cameraView)
         {
             _input = input;
+            _cameraView = cameraView;
             _characterSystem = characterManager;
             _UI = UI;
             _input.SetUI(_UI.GetInput);
         }
         private void Start()
         {
-            _player = new PlayerController(_input);
+            _player = new PlayerController(_input, _cameraView);
             _input.SetActive(true);
             SetCharacter();
         }

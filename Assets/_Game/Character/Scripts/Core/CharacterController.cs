@@ -6,16 +6,23 @@ namespace Character
     {
         public Animator Animation;
         public RuntimeAnimatorController Controller;
+        public Transform FirstView;
+        public Transform ThirdView;
     }
     [System.Serializable]
     public class CharacterController
     {
         private readonly Rigidbody _body;
         private Inputs.CharacterInput _input;
-        private ContainerData.CharacterContainerData _state;
+        private readonly ContainerData.CharacterContainerData _state;
         private readonly CharacterConfig _components;
         [SerializeField] private ChatacterView _characterView;
         private readonly CharacterMovement _movement;
+        private readonly CharacterRotation _rotation;
+        private readonly Transform _firstView;
+        private readonly Transform _thirdView;
+        public Transform FirstView => _firstView;
+        public Transform ThirdView => _thirdView;
         public CharacterController(CharacterConfig components, Rigidbody body)
         {
             _body = body;
@@ -23,6 +30,9 @@ namespace Character
             _state = new ContainerData.CharacterContainerData();
             _characterView = new ChatacterView(_state, _components.Controller, _components.Animation);
             _movement = new CharacterMovement(_state.movementState, _body);
+            _rotation = new CharacterRotation(_body.transform, _input);
+            _firstView = components.FirstView;
+            _thirdView = components.ThirdView;
         }
         public void Dispose()
         {
@@ -44,6 +54,9 @@ namespace Character
         public void FixedUpdate()
         {
             _movement.Moving();
+            if (_input != null) {
+                _rotation.Rotate();
+            }
         }
     }
 }

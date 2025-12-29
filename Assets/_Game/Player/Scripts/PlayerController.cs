@@ -4,22 +4,37 @@ namespace Player
     {
         private readonly Inputs.PlayerInput _input;
         //TODO UI
-        private Character.CharacterController _currentCharacter;
-        public PlayerController(Inputs.PlayerInput input)
+        private Character.CharacterController _character;
+        private readonly CameraView.CameraView _cameraView;
+        public PlayerController(Inputs.PlayerInput input, CameraView.CameraView cameraView)
         {
             _input = input;
+            _cameraView = cameraView;
+            _cameraView.SetInput(_input.CameraViewInput);
         }
         public void Dispose()
         {
         }
         public void SetCharacter(Character.CharacterController character)
         {
-            _currentCharacter = character;
-            if (_currentCharacter == null) {
+            _character = character;
+            if (_character == null) {
                 return;
             }
-            _currentCharacter.SetInput(_input.GetCharacterInput);
+            _character.SetInput(_input.GetCharacterInput);
             //TODO connect to UI
+            ChangedStateHuman();
+        }
+        private void ChangedStateHuman()
+        {
+            CameraView.ViewData view = _cameraView.GetFirstViewData;
+            view.parent = _character.FirstView;
+            view.minDist = 0;
+            view.localView = false;
+            view = _cameraView.GetThirdViewData;
+            view.parent = _character.ThirdView;
+            view.minDist = -8;//TODO
+            _cameraView.UpdateView(true);
         }
     }
 }

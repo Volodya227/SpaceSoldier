@@ -12,11 +12,14 @@ namespace Systems.DI
         private Player.PlayerSystem _playerSystem;
         [SerializeField] private UIGameplay.UISystem _UIPrefab;
         private UIGameplay.UISystem _UI;
+        [SerializeField] private CameraView.CameraView _cameraViewPrefab;
+        private CameraView.CameraView _cameraView;
         private void Awake()
         {
             InitCharacters();
             InitUI();
             InitInput();
+            InitCamera();
             InitPlayerSystem();
         }
         private void InitCharacters()
@@ -38,10 +41,14 @@ namespace Systems.DI
             }
             _playerInput = Instantiate(_playerInputPrefab);
         }
+        private void InitCamera()
+        {
+            _cameraView = Instantiate(_cameraViewPrefab);
+        }
         private void InitPlayerSystem()
         {
             _playerSystem = Instantiate(_playerSystemPrefab);
-            _playerSystem.Init(_playerInput, _characterSystem, _UI);
+            _playerSystem.Init(_playerInput, _characterSystem, _UI, _cameraView);
             _playerSystem.enabled = true;
         }
     }

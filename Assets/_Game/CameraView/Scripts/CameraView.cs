@@ -30,7 +30,7 @@ namespace CameraView
         public float mouseSensitivity = 2;
         [SerializeField] private Camera _camera;
         [SerializeField] private Transform _distance;
-        private ViewData[] _viewData = { new(null, 0, 0, true, true), new(null, 0, 0, false, false) };//first, third;
+        private readonly ViewData[] _viewData = { new(null, 0, 0, true, true), new(null, 0, 0, false, false) };//first, third;
         private int _currentView = -1;
         public ViewData GetFirstViewData => _viewData[0];
         public ViewData GetThirdViewData => _viewData[1];
@@ -82,10 +82,6 @@ namespace CameraView
                 Cursor.lockState = CursorLockMode.None;
             }
         }
-        public float GetRotationY()
-        {
-            return _mouseY;
-        }
         public void ResetView()
         {
             _mouseX = 0;
@@ -98,7 +94,7 @@ namespace CameraView
             _currentView %= _viewData.Length;
             _minDist = _viewData[_currentView].minDist;
             _maxDist = _viewData[_currentView].maxDist;
-            _input?.SetLockX(_viewData[_currentView].lockX);
+            //_input?.SetLockX(_viewData[_currentView].lockX);
             transform.parent = _viewData[_currentView].parent;
             transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             _distance.transform.SetLocalPositionAndRotation(new Vector3(0, 0, _minDist), Quaternion.identity);
