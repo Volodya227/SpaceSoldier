@@ -1,7 +1,6 @@
 using UnityEngine;
 namespace CameraView
 {
-    //TODO
     public class ViewData
     {
         public Transform parent;
@@ -94,12 +93,11 @@ namespace CameraView
             _currentView %= _viewData.Length;
             _minDist = _viewData[_currentView].minDist;
             _maxDist = _viewData[_currentView].maxDist;
-            //_input?.SetLockX(_viewData[_currentView].lockX);
             transform.parent = _viewData[_currentView].parent;
             transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             _distance.transform.SetLocalPositionAndRotation(new Vector3(0, 0, _minDist), Quaternion.identity);
             _camera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-            ResetView();
+            //ResetView();
         }
         public void SetInput(float x = 0, float y = 0, float z = 0)
         {

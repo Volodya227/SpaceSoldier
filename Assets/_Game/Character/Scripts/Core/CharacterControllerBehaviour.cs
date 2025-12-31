@@ -19,5 +19,9 @@ namespace Character {
         {
             _core.FixedUpdate();
         }
+        private void Update()
+        {
+            _core.Update();
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace Character
             _state = new ContainerData.CharacterContainerData();
             _characterView = new ChatacterView(_state, _components.Controller, _components.Animation);
             _movement = new CharacterMovement(_state.movementState, _body);
-            _rotation = new CharacterRotation(_body.transform, _input);
+            _rotation = new CharacterRotation(_body.transform);
             _firstView = components.FirstView;
             _thirdView = components.ThirdView;
         }
@@ -46,16 +46,24 @@ namespace Character
             }
             _input = input;
             _movement.SetInput(_input);
+            _rotation.SetInput(_input);
             if (_input != null)
             {
                 _input.SetActive(true);
             }
+            //reset state if input == null
+        }
+        public void Update()
+        {
+            if (_input != null)
+            {
+                _rotation.Rotate();
+            }
         }
         public void FixedUpdate()
         {
-            _movement.Moving();
             if (_input != null) {
-                _rotation.Rotate();
+                _movement.Moving();
             }
         }
     }

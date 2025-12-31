@@ -19,15 +19,9 @@ namespace Character
             _input = input;
         }
         public void Moving() {
-            float x = 0;
-            float z = 0;
-            if (_input != null) {
-                x = _input.MoveX;
-                z = _input.MoveZ;
-            }
-            Vector3 direction = _speed * Time.fixedDeltaTime * (_body.transform.right * x + _body.transform.forward * z).normalized;
+            Vector3 direction = _speed * Time.fixedDeltaTime * (_body.transform.right * _input.MoveX + _body.transform.forward * _input.MoveZ).normalized;
             _body.Move(_body.transform.localPosition + direction, _body.transform.rotation);
-            _state.SetDirectionMoving(x, z);
+            _state.SetDirectionMoving(_input.MoveX, _input.MoveZ);
         }
     }
 }

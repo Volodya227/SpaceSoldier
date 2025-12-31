@@ -5,16 +5,23 @@ namespace Player.Inputs
     {
         protected readonly PlayerCharacterInput _characterInput = new();
         protected readonly PlayerCameraViewInput _cameraViewInput = new();
+        protected UIGameplay.Inputs.IUIInputs _inputUI;
+        private readonly UIGameplay.Inputs.UIInputsNullReference _inputUINullRef = new();
         public PlayerCharacterInput GetCharacterInput => _characterInput;
         public PlayerCameraViewInput CameraViewInput => _cameraViewInput;
-
-
-        protected UIGameplay.Inputs.IUIInputs _inputUI;
-        private UIGameplay.Inputs.UIInputsNullReference _inputUINullRef = new();
         public bool Active { get; private set; } = false;
         private void Awake()
         {
             SetUI(null);
+            _cameraViewInput.EventChangeCameraView += SetViewToCharacter;
+        }
+        private void OnDestroy()
+        {
+            _cameraViewInput.EventChangeCameraView -= SetViewToCharacter;
+        }
+        private void SetViewToCharacter()
+        {
+            _characterInput.SetView(_cameraViewInput.CameraRotationX, _cameraViewInput.CameraRotationY);
         }
         public void SetActive(bool value)
         {
@@ -22,7 +29,7 @@ namespace Player.Inputs
         }
         public void SetUI(UIGameplay.Inputs.IUIInputs inputUI)
         {
-            _inputUI = (inputUI == null) ? _inputUINullRef : inputUI;
+            _inputUI = inputUI ?? _inputUINullRef;
         }
         protected void SetCameraViewInput(float x, float y)
         {

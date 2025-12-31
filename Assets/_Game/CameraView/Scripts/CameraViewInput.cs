@@ -3,6 +3,7 @@ namespace CameraView.Inputs
     public abstract class CameraViewInput
     {
         public event System.Action EventChangeView;
+        public event System.Action EventChangeCameraView;
         private bool _active = false;
         private float _cameraRotationX;
         private float _cameraRotationY;
@@ -23,6 +24,7 @@ namespace CameraView.Inputs
         public void SetXRotation(float rotation)
         {
             _cameraRotationX = rotation;
+            EventChangeCameraView?.Invoke();
         }
         protected void ChangeView()
         {

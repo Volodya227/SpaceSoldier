@@ -7,5 +7,9 @@ namespace Player.Inputs
             MoveX = x;
             MoveZ = z;
         }
+        public void SetView(float x, float y)
+        {
+            Yrotation = y;
+        }
     }
 }

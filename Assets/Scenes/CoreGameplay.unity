@@ -986,6 +986,10 @@ PrefabInstance:
       value: LayOut
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 4d382d9e3d3b14e3fa985476fcf990f4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 4d382d9e3d3b14e3fa985476fcf990f4, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
