@@ -4,7 +4,22 @@ namespace Weapon.Inputs
     {
         public event System.Action EventAttackPressed;
         public event System.Action EventAttackReleased;
-        public event System.Action Reload;
-        //TODO
+        public event System.Action EventReload;
+        public bool Active { get; private set; }
+        public void SetActive(bool value) {
+            Active = value;
+        }
+        protected void OnAttackPressed()
+        {
+            EventAttackPressed?.Invoke();
+        }
+        protected void OnAttackReleased()
+        {
+            EventAttackReleased?.Invoke();
+        }
+        protected void OnReload()
+        {
+            EventReload?.Invoke();
+        }
     }
 }

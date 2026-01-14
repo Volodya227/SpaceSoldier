@@ -8,12 +8,15 @@ namespace Character
         public RuntimeAnimatorController Controller;
         public Transform FirstView;
         public Transform ThirdView;
+        public Weapon.WeaponController WeaponController;
     }
     [System.Serializable]
     public class CharacterController
     {
         private readonly Rigidbody _body;
+        public Weapon.WeaponController _weaponController;
         private Inputs.CharacterInput _input;
+        private Weapon.Inputs.WeaponInput _weaponInput;
         private readonly ContainerData.CharacterContainerData _state;
         private readonly CharacterConfig _components;
         [SerializeField] private ChatacterView _characterView;
@@ -33,24 +36,28 @@ namespace Character
             _rotation = new CharacterRotation(_body.transform);
             _firstView = components.FirstView;
             _thirdView = components.ThirdView;
+
+            _weaponController = _components.WeaponController;
         }
         public void Dispose()
         {
             _characterView.Dispose();
         }
-        public void SetInput(Inputs.CharacterInput input)
+        public void SetInput(Inputs.CharacterInput input, Weapon.Inputs.WeaponInput weaponInput = null)
         {
             if(_input != null)
             {
                 _input.SetActive(false);
             }
             _input = input;
+            _weaponInput = weaponInput;
             _movement.SetInput(_input);
             _rotation.SetInput(_input);
             if (_input != null)
             {
                 _input.SetActive(true);
             }
+            _weaponController.SetInput(_weaponInput);
             //reset state if input == null
         }
         public void Update()

@@ -13,7 +13,7 @@ namespace Character {
         private void OnDestroy()
         {
             _core.Dispose();
-            _core.SetInput(null);
+            _core.SetInput(null, null);
         }
         private void FixedUpdate()
         {

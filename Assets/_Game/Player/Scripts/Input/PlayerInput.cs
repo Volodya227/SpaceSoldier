@@ -5,10 +5,12 @@ namespace Player.Inputs
     {
         protected readonly PlayerCharacterInput _characterInput = new();
         protected readonly PlayerCameraViewInput _cameraViewInput = new();
+        protected readonly PlayerWeaponInput _weaponInput = new();
         protected UIGameplay.Inputs.IUIInputs _inputUI;
         private readonly UIGameplay.Inputs.UIInputsNullReference _inputUINullRef = new();
         public PlayerCharacterInput GetCharacterInput => _characterInput;
         public PlayerCameraViewInput CameraViewInput => _cameraViewInput;
+        public PlayerWeaponInput GetWeaponInput => _weaponInput;
         public bool Active { get; private set; } = false;
         private void Awake()
         {

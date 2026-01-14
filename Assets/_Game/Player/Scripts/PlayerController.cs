@@ -21,7 +21,7 @@ namespace Player
             if (_character == null) {
                 return;
             }
-            _character.SetInput(_input.GetCharacterInput);
+            _character.SetInput(_input.GetCharacterInput, _input.GetWeaponInput);
             //TODO connect to UI
             ChangedStateHuman();
         }
