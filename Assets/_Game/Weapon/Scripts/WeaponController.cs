@@ -1,8 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 namespace Weapon
 {
     public class WeaponController : MonoBehaviour
     {
+        private Coroutine _flashRoutine;
         private enum WeaponState
         {
             Cooldown,
@@ -14,6 +16,7 @@ namespace Weapon
         private WeaponState _state;
         [SerializeField] private Transform _targetPoint;
         [SerializeField] private DecalLifetime _decalLifeTimePrefab;
+        [SerializeField] private GameObject _muzzleFlash;
         private float _reloadTime;
         private float _reloadingTime;
         private float _cooldownTime;
@@ -23,6 +26,7 @@ namespace Weapon
         private int _projectileMaxCount;
         private void Awake()
         {
+            _muzzleFlash.SetActive(false);
             _reloadTime = 8;
             _cooldownTime = 2;
             _projectileMaxCount = 20;
@@ -78,6 +82,7 @@ namespace Weapon
         {
             _projectileCount--;
             Debug.Log("Is shoot");
+            ShowMuzzleFlash();
             Ray ray = new(_targetPoint.position, _targetPoint.forward);
             //Debug.DrawRay(_targetPoint.position, _targetPoint.forward * _shootDistance, Color.red, 10);
             if (Physics.Raycast(ray, out RaycastHit hit, _shootDistance))
@@ -126,6 +131,19 @@ namespace Weapon
         private void AttackReleased()
         {
             _isFiring = false;
+        }
+        private void ShowMuzzleFlash()
+        {
+            if (_flashRoutine != null)
+                StopCoroutine(_flashRoutine);
+
+            _flashRoutine = StartCoroutine(MuzzleFlashRoutine());
+        }
+        private IEnumerator MuzzleFlashRoutine()
+        {
+            _muzzleFlash.SetActive(true);
+            yield return new WaitForSeconds(0.03f);
+            _muzzleFlash.SetActive(false);
         }
     }
 }
