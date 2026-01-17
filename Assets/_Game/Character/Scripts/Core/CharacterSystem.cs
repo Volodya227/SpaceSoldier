@@ -14,7 +14,7 @@ namespace Character
         private SpawnCharacters _spawn;
         [SerializeField] private CharacterControllerBehaviour _characterControllerBehaviourPrefab;
         private readonly List<CharacterControllerBehaviour> _characters = new();
-        private int _currentCharacter = 0;
+        private int _currentCharacter = -1;
         public CharacterController GetChatacter => _characters[_currentCharacter].Core;
         public void Init(SpawnCharacters spawn)
         {
@@ -30,6 +30,15 @@ namespace Character
         {
             CharacterControllerBehaviour newItem = Instantiate(_characterControllerBehaviourPrefab, position.position, position.rotation);
             _characters.Add(newItem);
+        }
+        public void ChangeCharacter()
+        {
+            if (_currentCharacter >= 0)
+            {
+                _characters[_currentCharacter].Core.SetInput(null);
+            }
+            _currentCharacter++;
+            _currentCharacter %= _characters.Count;
         }
     }
 }

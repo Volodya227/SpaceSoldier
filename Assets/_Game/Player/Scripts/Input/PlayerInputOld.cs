@@ -5,23 +5,30 @@ namespace Player.Inputs
     {
         private void Update()
         {
-            if (_cameraViewInput.Active)
+            if (Active)
             {
-                SetCameraViewInput(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-                if (Input.GetKeyDown(KeyCode.V))
+                if (Input.GetKeyDown(KeyCode.L))
                 {
-                    _cameraViewInput.ActivateChangeView();
+                    ActivateEventChanageCharacter();
                 }
-            }
-            if (_weaponInput.Active)
-            {
-                if (Input.GetMouseButtonDown(0))
-                    _weaponInput.InputAttackPressed();
-                if (Input.GetMouseButtonUp(0))
-                    _weaponInput.InputAttackReleased();
-                if (Input.GetKeyDown(KeyCode.R))
+                if (_cameraViewInput.Active)
                 {
-                    _weaponInput.InputReload();
+                    SetCameraViewInput(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+                    if (Input.GetKeyDown(KeyCode.V))
+                    {
+                        _cameraViewInput.ActivateChangeView();
+                    }
+                }
+                if (_weaponInput.Active)
+                {
+                    if (Input.GetMouseButtonDown(0))
+                        _weaponInput.InputAttackPressed();
+                    if (Input.GetMouseButtonUp(0))
+                        _weaponInput.InputAttackReleased();
+                    if (Input.GetKeyDown(KeyCode.R))
+                    {
+                        _weaponInput.InputReload();
+                    }
                 }
             }
         }

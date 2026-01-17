@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Character {
     [RequireComponent(typeof(Rigidbody))]
-    public class CharacterControllerBehaviour : MonoBehaviour
+    public class CharacterControllerBehaviour : MonoBehaviour, Weapon.ITakeDamageable
     {
         [SerializeField] private CharacterConfig _inputComponents;
         [SerializeField] private CharacterController _core;
@@ -22,6 +22,9 @@ namespace Character {
         private void Update()
         {
             _core.Update();
+        }
+        public void TakeDamage(float damage) {
+            _core.TakeDamage(damage);
         }
     }
 }

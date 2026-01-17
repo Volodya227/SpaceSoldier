@@ -10,8 +10,11 @@ namespace Weapon
             Cooldown,
             Reloading
         }
+        private readonly ContainerData.WeaponContainerData _weaponContainerData = new();
+        public ContainerData.IWeaponContainerData GetWeaponContainerData => _weaponContainerData;
         private bool _isFiring;
         private bool _isAutomated;
+        private int _damage;
         private Inputs.WeaponInput _weaponInput;
         private WeaponState _state;
         [SerializeField] private Transform _targetPoint;
@@ -27,12 +30,19 @@ namespace Weapon
         private void Awake()
         {
             _muzzleFlash.SetActive(false);
-            _reloadTime = 8;
-            _cooldownTime = 2;
-            _projectileMaxCount = 20;
+            _reloadTime = 6;
+            _cooldownTime = .4f;
+            _projectileMaxCount = 30;
+            _damage = 40;
             _isAutomated = true;
             _shootDistance = 700;
+            UpdateState();
             StartReload();
+        }
+        private void UpdateState()
+        {
+            _weaponContainerData.SetprojectileCount(_projectileCount);
+            _weaponContainerData.SetprojectileCountMax(_projectileMaxCount);
         }
         private void OnDestroy()
         {
@@ -40,12 +50,11 @@ namespace Weapon
         }
         private void Reload()
         {
-            _reloadingTime = 0;
             _projectileCount = _projectileMaxCount;
+            UpdateState();
         }
         private void Cooldown()
         {
-            _reloadingTime = 0;
         }
         private void Update()
         {
@@ -61,9 +70,11 @@ namespace Weapon
             _reloadingTime -= Time.deltaTime;
             if (_reloadingTime < 0)
             {
-                if(_state == WeaponState.Reloading) Reload();
+                _reloadingTime = 0;
+                if (_state == WeaponState.Reloading) Reload();
                 if(_state == WeaponState.Cooldown) Cooldown();
             }
+            _weaponContainerData.SetReloadingTime(_reloadingTime);
         }
         private void TryShoot()
         {
@@ -81,18 +92,23 @@ namespace Weapon
         private void Shoot()
         {
             _projectileCount--;
-            Debug.Log("Is shoot");
+            _weaponContainerData.SetprojectileCount(_projectileCount);
+            //Debug.Log("Is shoot");
             ShowMuzzleFlash();
             Ray ray = new(_targetPoint.position, _targetPoint.forward);
             //Debug.DrawRay(_targetPoint.position, _targetPoint.forward * _shootDistance, Color.red, 10);
             if (Physics.Raycast(ray, out RaycastHit hit, _shootDistance))
             {
-                Debug.Log("Is hit");
+                //Debug.Log("Is hit");
                 Quaternion rotation = Quaternion.LookRotation(hit.normal);
-
                 Instantiate(_decalLifeTimePrefab, hit.point + hit.normal * 0.01f, rotation);
-            }
 
+                ITakeDamageable damageable = hit.collider.GetComponentInParent<ITakeDamageable>();
+                if (damageable != null)
+                {
+                    damageable.TakeDamage(_damage);
+                }
+            }
             if (_projectileCount > 0)
                 StartCooldown();
         }

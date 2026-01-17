@@ -13,11 +13,13 @@ namespace Character
     [System.Serializable]
     public class CharacterController
     {
+        private bool _isAlive;
         private readonly Rigidbody _body;
-        public Weapon.WeaponController _weaponController;
+        private Weapon.WeaponController _weaponController;
         private Inputs.CharacterInput _input;
         private Weapon.Inputs.WeaponInput _weaponInput;
         private readonly ContainerData.CharacterContainerData _state;
+        public ContainerData.ICharacterContainerData State => _state;
         private readonly CharacterConfig _components;
         [SerializeField] private ChatacterView _characterView;
         private readonly CharacterMovement _movement;
@@ -38,6 +40,8 @@ namespace Character
             _thirdView = components.ThirdView;
 
             _weaponController = _components.WeaponController;
+            _state.SetWeaponContainerData(_weaponController.GetWeaponContainerData);
+            _isAlive = true;
         }
         public void Dispose()
         {
@@ -53,24 +57,51 @@ namespace Character
             _weaponInput = weaponInput;
             _movement.SetInput(_input);
             _rotation.SetInput(_input);
-            if (_input != null)
+            if (_isAlive)
             {
-                _input.SetActive(true);
+                if (_input != null)
+                {
+                    _input.SetActive(true);
+                }
+                _weaponController.SetInput(_weaponInput);
             }
-            _weaponController.SetInput(_weaponInput);
             //reset state if input == null
+
         }
         public void Update()
         {
-            if (_input != null)
+            if (_isAlive)
             {
-                _rotation.Rotate();
+                if (_input != null)
+                {
+                    _rotation.Rotate();
+                }
             }
         }
         public void FixedUpdate()
         {
-            if (_input != null) {
+            if (_input != null)
+            {
                 _movement.Moving();
+            }
+        }
+        public void TakeDamage(float damage) {
+            _state.healthState.TakeDamage(damage);
+            if (_state.healthState.Health == 0)
+            {
+                _isAlive = false;
+                _input?.SetActive(false);
+                _weaponInput?.SetActive(false);
+            }
+        }
+        public void Respawn()
+        {
+            _state.healthState.SetFullHealth();
+            _isAlive = true;
+            _input?.SetActive(true);
+            if (_weaponController != null)
+            {
+                _weaponInput?.SetActive(true);
             }
         }
     }

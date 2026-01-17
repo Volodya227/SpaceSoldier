@@ -14,23 +14,25 @@ namespace Player
             _cameraView = cameraView;
             _characterSystem = characterManager;
             _UI = UI;
-            _input.SetUI(_UI.GetInput);
         }
         private void Start()
         {
-            _player = new PlayerController(_input, _cameraView);
+            _player = new PlayerController(_input, _cameraView, _UI);
+            _input.SetUI(_UI.GetInput);
             _input.SetActive(true);
             SetCharacter();
+            _input.EventChanageCharacter += SetCharacter;
         }
         private void OnDestroy()
         {
             _player.Dispose();
             _input.SetUI(null);
             _input.SetActive(false);
+            _input.EventChanageCharacter -= SetCharacter;
         }
         private void SetCharacter()
         {
-            //TODO Change Character by CharacterSystem
+            _characterSystem.ChangeCharacter();
             _player.SetCharacter(_characterSystem.GetChatacter);
         }
     }

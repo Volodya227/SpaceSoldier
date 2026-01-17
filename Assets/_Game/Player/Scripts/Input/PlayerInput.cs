@@ -3,6 +3,7 @@ namespace Player.Inputs
 {
     public abstract class PlayerInput : MonoBehaviour
     {
+        public event System.Action EventChanageCharacter;
         protected readonly PlayerCharacterInput _characterInput = new();
         protected readonly PlayerCameraViewInput _cameraViewInput = new();
         protected readonly PlayerWeaponInput _weaponInput = new();
@@ -36,6 +37,10 @@ namespace Player.Inputs
         protected void SetCameraViewInput(float x, float y)
         {
             _cameraViewInput.SetXY(x, y);
+        }
+        protected void ActivateEventChanageCharacter()
+        {
+            EventChanageCharacter?.Invoke();
         }
     }
 }

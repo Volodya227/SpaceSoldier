@@ -3,27 +3,33 @@ namespace Player
     public class PlayerController
     {
         private readonly Inputs.PlayerInput _input;
-        //TODO UI
+        private readonly UIGameplay.UISystem _systemUI;
         private Character.CharacterController _character;
         private readonly CameraView.CameraView _cameraView;
-        public PlayerController(Inputs.PlayerInput input, CameraView.CameraView cameraView)
+        public PlayerController(Inputs.PlayerInput input, CameraView.CameraView cameraView, UIGameplay.UISystem systemUI)
         {
             _input = input;
             _cameraView = cameraView;
             _cameraView.SetInput(_input.CameraViewInput);
+            _systemUI = systemUI;
         }
         public void Dispose()
         {
         }
         public void SetCharacter(Character.CharacterController character)
         {
+            _systemUI.GetCharacterUI.SetState(null);
+            _systemUI.GetWeaponUI.SetState(null);
+
             _character = character;
             if (_character == null) {
                 return;
             }
             _character.SetInput(_input.GetCharacterInput, _input.GetWeaponInput);
-            //TODO connect to UI
             ChangedStateHuman();
+            //UI
+            _systemUI.GetCharacterUI.SetState(_character.State);
+            _systemUI.GetWeaponUI.SetState(_character.State.WeaponContainerData);
         }
         private void ChangedStateHuman()
         {
