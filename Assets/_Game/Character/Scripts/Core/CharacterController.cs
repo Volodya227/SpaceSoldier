@@ -41,7 +41,7 @@ namespace Character
 
             _weaponController = _components.WeaponController;
             _state.SetWeaponContainerData(_weaponController.GetWeaponContainerData);
-            _isAlive = true;
+            Respawn();
         }
         public void Dispose()
         {
@@ -65,8 +65,7 @@ namespace Character
                 }
                 _weaponController.SetInput(_weaponInput);
             }
-            //reset state if input == null
-
+            //TODO reset state if input == null
         }
         public void Update()
         {
@@ -80,10 +79,7 @@ namespace Character
         }
         public void FixedUpdate()
         {
-            if (_input != null)
-            {
-                _movement.Moving();
-            }
+            _movement.Moving();
         }
         public void TakeDamage(float damage) {
             _state.healthState.TakeDamage(damage);

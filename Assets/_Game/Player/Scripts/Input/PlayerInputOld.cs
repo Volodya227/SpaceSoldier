@@ -13,22 +13,28 @@ namespace Player.Inputs
                 }
                 if (_cameraViewInput.Active)
                 {
-                    SetCameraViewInput(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-                    if (Input.GetKeyDown(KeyCode.V))
+                    if (_isUI)
                     {
-                        _cameraViewInput.ActivateChangeView();
+                        SetCameraViewInput(_inputUI.MoveX/5, 0);
                     }
+                    else
+                    {
+                        SetCameraViewInput(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+                    }
+                    if (Input.GetKeyDown(KeyCode.V))
+                        _cameraViewInput.ActivateChangeView();
                 }
                 if (_weaponInput.Active)
                 {
-                    if (Input.GetMouseButtonDown(0))
-                        _weaponInput.InputAttackPressed();
-                    if (Input.GetMouseButtonUp(0))
-                        _weaponInput.InputAttackReleased();
-                    if (Input.GetKeyDown(KeyCode.R))
+                    if (!_isUI)
                     {
-                        _weaponInput.InputReload();
+                        if (Input.GetMouseButtonDown(0))
+                            _weaponInput.InputAttackPressed();
+                        if (Input.GetMouseButtonUp(0))
+                            _weaponInput.InputAttackReleased();
                     }
+                    if (Input.GetKeyDown(KeyCode.R))
+                        _weaponInput.InputReload();
                 }
             }
         }

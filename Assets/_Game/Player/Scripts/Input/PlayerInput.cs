@@ -4,6 +4,8 @@ namespace Player.Inputs
     public abstract class PlayerInput : MonoBehaviour
     {
         public event System.Action EventChanageCharacter;
+        protected bool _isUI = false;
+        private bool _bindedUIInput = false;
         protected readonly PlayerCharacterInput _characterInput = new();
         protected readonly PlayerCameraViewInput _cameraViewInput = new();
         protected readonly PlayerWeaponInput _weaponInput = new();
@@ -13,10 +15,20 @@ namespace Player.Inputs
         public PlayerCameraViewInput CameraViewInput => _cameraViewInput;
         public PlayerWeaponInput GetWeaponInput => _weaponInput;
         public bool Active { get; private set; } = false;
-        private void Awake()
+        protected void Awake()
         {
             SetUI(null);
             _cameraViewInput.EventChangeCameraView += SetViewToCharacter;
+            SetActiveUIInput(false);//correctly set state
+        }
+        public void SetActiveUIInput(bool value)
+        {
+            _isUI = value;
+            _cameraViewInput.SetMouseLockMode(!_isUI);
+            if (_bindedUIInput)
+                UnbindUI();
+            if (_isUI)
+                BindUI();
         }
         private void OnDestroy()
         {
@@ -32,7 +44,9 @@ namespace Player.Inputs
         }
         public void SetUI(UIGameplay.Inputs.IUIInputs inputUI)
         {
+            UnbindUI();
             _inputUI = inputUI ?? _inputUINullRef;
+            SetActiveUIInput(_isUI);
         }
         protected void SetCameraViewInput(float x, float y)
         {
@@ -41,6 +55,39 @@ namespace Player.Inputs
         protected void ActivateEventChanageCharacter()
         {
             EventChanageCharacter?.Invoke();
+        }
+        //TODO bind event from UI
+        private void BindUI()
+        {
+            if (!_isUI) return;
+            _bindedUIInput = true;
+            if (_inputUI == null) return;
+            _inputUI.EventAttackPressed += ActivateEventAttackPressed;
+            _inputUI.EventAttackReleased += ActivateEventAttackReleased;
+            _inputUI.EventReloading += ActivateEventReload;
+        }
+        private void UnbindUI()
+        {
+            _bindedUIInput = false;
+            if (_inputUI == null) return;
+            _inputUI.EventAttackPressed -= ActivateEventAttackPressed;
+            _inputUI.EventAttackReleased -= ActivateEventAttackReleased;
+            _inputUI.EventReloading -= ActivateEventReload;
+        }
+        private void ActivateEventAttackPressed()
+        {
+            if (_weaponInput.Active)
+                _weaponInput.InputAttackPressed();
+        }
+        private void ActivateEventAttackReleased()
+        {
+            if (_weaponInput.Active)
+                _weaponInput.InputAttackReleased();
+        }
+        private void ActivateEventReload()
+        {
+            if (_weaponInput.Active)
+                _weaponInput.InputReload();
         }
     }
 }

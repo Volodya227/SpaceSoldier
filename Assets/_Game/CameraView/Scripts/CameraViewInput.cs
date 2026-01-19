@@ -2,6 +2,7 @@ namespace CameraView.Inputs
 {
     public abstract class CameraViewInput
     {
+        public event System.Action EventChangeLockMouseMode;
         public event System.Action EventChangeView;
         public event System.Action EventChangeCameraView;
         private bool _active = false;
@@ -9,6 +10,7 @@ namespace CameraView.Inputs
         private float _cameraRotationY;
         protected float _mouseXMove;
         protected float _mouseYMove;
+        public bool LockMouseMode { get; private set; }
         public float MouseXMove => _mouseXMove;
         public float MouseYMove => _mouseYMove;
         //TODO
@@ -29,6 +31,10 @@ namespace CameraView.Inputs
         protected void ChangeView()
         {
             EventChangeView?.Invoke();
+        }
+        protected void ChangeLockMouseMode(bool value) {
+            LockMouseMode = value;
+            EventChangeLockMouseMode?.Invoke();
         }
     }
 }

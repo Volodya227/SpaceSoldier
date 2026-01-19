@@ -53,6 +53,8 @@ namespace CameraView
             if (_input != null)
             {
                 _input.EventChangeView += ChangeCamera;
+                _input.EventChangeLockMouseMode += SetMouseLockMode;
+                SetMouseLockMode();
                 _input.SetActive(true);
             }
         }
@@ -61,6 +63,7 @@ namespace CameraView
             if (_input != null)
             {
                 _input.EventChangeView -= ChangeCamera;
+                _input.EventChangeLockMouseMode -= SetMouseLockMode;
                 _input.SetActive(false);
             }
         }
@@ -98,6 +101,10 @@ namespace CameraView
             _distance.transform.SetLocalPositionAndRotation(new Vector3(0, 0, _minDist), Quaternion.identity);
             _camera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             //ResetView();
+        }
+        private void SetMouseLockMode()
+        {
+            SetLockCursor(_input.LockMouseMode);
         }
         public void SetInput(float x = 0, float y = 0, float z = 0)
         {

@@ -11,5 +11,8 @@ namespace Player.Inputs
         {
             ChangeView();
         }
+        public void SetMouseLockMode(bool value) {
+            ChangeLockMouseMode(value);
+        }
     }
 }
