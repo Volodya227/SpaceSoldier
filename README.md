@@ -1,225 +1,46 @@
 SpaceSoldier — Modular FPS Prototype (Unity)
 
-Custom FPS prototype focused on modular system architecture, input abstraction, and explicit game state control. The project explores scalable structure for gameplay systems while keeping Unity integration isolated where possible. Core gameplay logic is separated from engine-specific components and organized into independent systems.
+Custom FPS prototype focused on modular gameplay architecture and input abstraction.
+The project explores how gameplay systems can be structured independently from Unity-specific components.
+
+Core idea:
+Separate gameplay logic from engine infrastructure while keeping the project lightweight and framework-free.
 
 Architecture
 
-The project follows a layered modular design:
+The project is organized into independent systems:
 
-Bootstrap layer — initializes global systems and manages scene loading
-Systems layer — gameplay orchestration (player, character, weapon)
-Input layer — abstraction over multiple input sources
-UI layer — state visualization and optional mobile input
-Gameplay layer — core mechanics (movement, weapon, health)
+Bootstrap — initializes global services and manages scene loading  
+Systems — gameplay orchestration (player, character, weapon)  
+Input Layer — abstraction over multiple input sources  
+UI Layer — gameplay state visualization  
+Camera — view control
 
-Structure:
+MonoBehaviour classes primarily act as adapters between Unity and the core systems.
 
-Bootstrap
-   │
-   ▼
-GlobalContainerSystems
-   │
-   ▼
-Scene Systems
-   │
-   ├─ PlayerSystem
-   ├─ CharacterSystem
-   ├─ UISystem
-   └─ CameraView
+Input System
 
-Gameplay logic is separated from Unity lifecycle where possible. MonoBehaviour classes primarily act as adapters between Unity and core systems.
-
-Bootstrap System
-
-A minimal bootstrap container replaces heavy DI frameworks (Zenject, etc.).
-
-Responsibilities:
-
-initialize global services
-
-manage scene transitions
-
-provide shared systems through a global container
-
-avoid static singleton dependencies
-
-Structure:
-
-Bootstrap
-   │
-   ├─ PlayerInput
-   ├─ ApplicationData
-   └─ BootstrapEvents
-
-Scene-specific initialization is handled by scene bootstrap components.
-
-Input Architecture
-
-Input handling is abstracted from gameplay logic. The system supports multiple input sources without modifying gameplay code.
+Input handling is fully abstracted from gameplay logic.  
+Gameplay systems receive domain-specific input objects instead of raw Unity input.
 
 Supported input sources:
+- Unity Legacy Input
+- Unity Input System
+- Mobile UI joystick
 
-Unity legacy Input API
+This allows switching input implementations without modifying gameplay systems.
 
-Unity Input System
+Bootstrap
 
-UI joystick (mobile)
-
-Structure:
-
-Input Sources
-   │
-   ├─ PlayerInputOld
-   ├─ PlayerInputNew
-   └─ UIInputAdapter
-        │
-        ▼
-PlayerInput
-        │
-        ▼
-CharacterInput / WeaponInput / CameraInput
-
-Gameplay systems receive only domain-specific input objects, not raw engine input.
-
-Character System
-
-The character system manages player-controlled entities and encapsulates movement, rotation, health, and weapon interaction.
-
-Structure:
-
-CharacterSystem
-      │
-      ▼
-CharacterController
-   │        │
-   ▼        ▼
-Movement   WeaponController
+A lightweight bootstrap container replaces heavy DI frameworks.
 
 Responsibilities:
+- initialize global services
+- manage scene transitions
+- expose shared systems through a global container
 
-character lifecycle
+Tech
 
-movement physics
-
-view orientation
-
-health state
-
-weapon integration
-
-Character behavior is split into specialized components (movement, rotation) to isolate responsibilities.
-
-Weapon System
-
-The weapon controller implements a simple hitscan shooting system.
-
-Features:
-
-raycast-based shooting
-
-reload timer
-
-cooldown control
-
-muzzle flash animation
-
-ammo state tracking
-
-damage interface (ITakeDamageable)
-
-Structure:
-
-WeaponController
-   │
-   ├─ cooldown timer
-   ├─ reload logic
-   └─ raycast hit detection
-
-Weapon state is synchronized with UI through a container data model.
-
-UI Layer
-
-The UI system visualizes gameplay state and optionally generates input for mobile platforms.
-
-Structure:
-
-UISystem
-   │
-   ├─ UIInputAdapter
-   ├─ UICharacter
-   └─ UIWeapon
-
-Responsibilities:
-
-display character health
-
-display weapon state
-
-provide joystick input
-
-dispatch UI input events
-
-UI components subscribe to gameplay state changes and do not mutate gameplay state directly.
-
-State and Data Flow
-
-Gameplay systems rely on explicit state containers instead of implicit engine state.
-
-Key principles:
-
-explicit state mutation
-
-event-driven UI updates
-
-clear separation between simulation and rendering
-
-deterministic update order
-
-Example flow:
-
-Input
-  │
-  ▼
-PlayerController
-  │
-  ▼
-CharacterController
-  │
-  ├─ Movement update
-  └─ Weapon update
-  │
-  ▼
-UI reacts to state changes
-Engine Interaction
-
-Unity is used primarily as a runtime environment and rendering layer.
-
-Unity responsibilities:
-
-lifecycle callbacks (Awake, Update, FixedUpdate)
-
-physics (Rigidbody)
-
-scene loading
-
-animation
-
-visual effects
-
-Gameplay systems avoid direct dependency on Unity where possible, allowing clearer control over state and update flow.
-
-Design Focus
-
-This prototype emphasizes:
-
-modular gameplay architecture
-
-input abstraction
-
-minimal dependency injection approach
-
-explicit system boundaries
-
-scalable project structure
-
-The project serves as a preparation stage before developing a larger gameplay-oriented pet project.
+Unity  
+C#  
+Custom lightweight bootstrap (no external DI frameworks)
