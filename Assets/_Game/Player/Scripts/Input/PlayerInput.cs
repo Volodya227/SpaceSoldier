@@ -1,3 +1,4 @@
+using UIGameplay;
 using UnityEngine;
 namespace Player.Inputs
 {
@@ -29,6 +30,7 @@ namespace Player.Inputs
                 UnbindUI();
             if (_isUI)
                 BindUI();
+            _inputUI?.SetGameplayMode(_isUI);
         }
         private void OnDestroy()
         {

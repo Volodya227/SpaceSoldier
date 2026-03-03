@@ -15,7 +15,8 @@ namespace Player.Inputs
                 {
                     if (_isUI)
                     {
-                        SetCameraViewInput(_inputUI.MoveX/5, 0);
+                        //TODO second joystick for rotate view
+                        //SetCameraViewInput(_inputUI.MoveX/5, 0);
                     }
                     else
                     {

@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-
 namespace UIGameplay.Inputs
 {
     public sealed class UIInputAdapter : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
+        private bool _active;
+        [SerializeField] private GameObject _inputObject;
         [Header("Joystick")]
         [SerializeField] private RectTransform _joystickFrame;
         [SerializeField] private RectTransform _joystickHandle;
@@ -25,7 +26,15 @@ namespace UIGameplay.Inputs
 
         public void Init(UIInputs inputs)
         {
+            if (_inputs != null) {
+                _inputs.EventChangeActive -= SetActivate;
+            }
             _inputs = inputs;
+            if (_inputs != null)
+            {
+                _inputs.EventChangeActive += SetActivate;
+            }
+            SetActivate();
             _joystick = new JoystickRole(_joystickFrame, _joystickHandle, _radius, _inputs, _uiCamera);
             _fire = new FireButtonRole(_fireButton, _inputs, _uiCamera);
             _reload = new ReloadButtonRole(_reloadButton, _inputs, _uiCamera);
@@ -34,8 +43,14 @@ namespace UIGameplay.Inputs
         {
             _uiCamera = _canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : _canvas.worldCamera;
         }
+        private void OnDestroy()
+        {
+            if(_inputs == null) return;
+            _inputs.EventChangeActive -= SetActivate;
+        }
         public void OnPointerDown(PointerEventData e)
         {
+            if(!_active) return;
             if (_joystick.IsTarget(e))
                 _joystick.OnPointerDown(e);
             else if (_fire.IsTarget(e))
@@ -45,12 +60,20 @@ namespace UIGameplay.Inputs
         }
         public void OnDrag(PointerEventData e)
         {
+            if (!_active) return;
             _joystick.OnDrag(e);
         }
         public void OnPointerUp(PointerEventData e)
         {
+            if (!_active) return;
             _joystick.OnPointerUp(e);
             _fire.OnPointerUp(e);
+        }
+        private void SetActivate()
+        {
+            if (_inputs == null) return;
+            _active = _inputs.Active;
+            _inputObject.SetActive(_active);
         }
     }
 }

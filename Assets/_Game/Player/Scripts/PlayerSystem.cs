@@ -33,7 +33,7 @@ namespace Player
         private void SetCharacter()
         {
             _characterSystem.ChangeCharacter();
-            _player.SetCharacter(_characterSystem.GetChatacter);
+            _player.SetCharacter(_characterSystem.GetCharacter);
         }
     }
 }

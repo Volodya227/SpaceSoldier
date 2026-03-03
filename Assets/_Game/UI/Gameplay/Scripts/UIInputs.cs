@@ -7,13 +7,16 @@ namespace UIGameplay.Inputs
         public event System.Action EventReloading;
         public float MoveX { get;}
         public float MoveZ { get; }
+        public void SetGameplayMode(bool active);
     }
     [System.Serializable]
     public sealed class UIInputs : IUIInputs
     {
+        public event System.Action EventChangeActive;
         public event System.Action EventAttackPressed;
         public event System.Action EventAttackReleased;
         public event System.Action EventReloading;
+        public bool Active { get; private set; }
         public float MoveX { get; private set; }
         public float MoveZ { get; private set; }
         public void SignalMove(float x, float z)
@@ -42,6 +45,11 @@ namespace UIGameplay.Inputs
             MoveX = 0;
             MoveZ = 0;
         }
+        public void SetGameplayMode(bool active)
+        {
+            Active = active;
+            EventChangeActive?.Invoke();
+        }
     }
     public class UIInputsNullReference : IUIInputs
     {
@@ -50,5 +58,6 @@ namespace UIGameplay.Inputs
         public event System.Action EventReloading;
         public float MoveX => 0;
         public float MoveZ => 0;
+        public void SetGameplayMode(bool active) { }
     }
 }

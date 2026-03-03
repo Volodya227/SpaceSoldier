@@ -15,7 +15,7 @@ namespace Character
         [SerializeField] private CharacterControllerBehaviour _characterControllerBehaviourPrefab;
         private readonly List<CharacterControllerBehaviour> _characters = new();
         private int _currentCharacter = -1;
-        public CharacterController GetChatacter => _characters[_currentCharacter].Core;
+        public CharacterController GetCharacter => _characters[_currentCharacter].Core;
         public void Init(SpawnCharacters spawn)
         {
             _spawn = spawn;
