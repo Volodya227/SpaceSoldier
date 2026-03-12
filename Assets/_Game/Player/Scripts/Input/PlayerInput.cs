@@ -1,4 +1,3 @@
-using UIGameplay;
 using UnityEngine;
 namespace Player.Inputs
 {
@@ -20,7 +19,7 @@ namespace Player.Inputs
         {
             SetUI(null);
             _cameraViewInput.EventChangeCameraView += SetViewToCharacter;
-            SetActiveUIInput(false);//correctly set state
+            SetActiveUIInput(true);//correctly set state
         }
         public void SetActiveUIInput(bool value)
         {

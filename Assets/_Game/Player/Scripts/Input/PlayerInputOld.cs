@@ -3,6 +3,7 @@ namespace Player.Inputs
 {
     public class PlayerInputOld : PlayerInput
     {
+        private bool _dragMouse;
         private void Update()
         {
             if (Active)
@@ -13,12 +14,9 @@ namespace Player.Inputs
                 }
                 if (_cameraViewInput.Active)
                 {
-                    if (_isUI)
-                    {
-                        //TODO second joystick for rotate view
-                        //SetCameraViewInput(_inputUI.MoveX/5, 0);
-                    }
-                    else
+                    if (Input.GetKeyDown(KeyCode.Mouse0) || !_isUI) _dragMouse = true;
+                    if (Input.GetKeyUp(KeyCode.Mouse0)) _dragMouse = false;
+                    if (_dragMouse)
                     {
                         SetCameraViewInput(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
                     }
