@@ -29,6 +29,7 @@ namespace Player
             _input.SetUI(null);
             _input.SetActive(false);
             _input.EventChanageCharacter -= SetCharacter;
+            _input.Dispose();
         }
         private void SetCharacter()
         {

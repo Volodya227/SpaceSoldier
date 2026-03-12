@@ -3,7 +3,6 @@ namespace Player.Inputs
 {
     public class PlayerInputOld : PlayerInput
     {
-        private bool _dragMouse;
         private void Update()
         {
             if (Active)
@@ -12,14 +11,21 @@ namespace Player.Inputs
                 {
                     ActivateEventChanageCharacter();
                 }
+                if (Input.GetKeyDown(KeyCode.U))
+                {
+                    SetActiveUIInput(!_isUI);
+                }
                 if (_cameraViewInput.Active)
                 {
-                    if (Input.GetKeyDown(KeyCode.Mouse0) || !_isUI) _dragMouse = true;
-                    if (Input.GetKeyUp(KeyCode.Mouse0)) _dragMouse = false;
-                    if (_dragMouse)
+                    if (Input.GetKeyDown(KeyCode.Mouse0) || !_isUI)
                     {
-                        SetCameraViewInput(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+                        if(!_eventSystem.IsPointerOverGameObject())
+                            _dragMouse = true;
                     }
+                    if (Input.GetKeyUp(KeyCode.Mouse0))
+                        _dragMouse = false;
+                    if (_dragMouse)
+                        SetCameraViewInput(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
                     if (Input.GetKeyDown(KeyCode.V))
                         _cameraViewInput.ActivateChangeView();
                 }
@@ -28,12 +34,12 @@ namespace Player.Inputs
                     if (!_isUI)
                     {
                         if (Input.GetMouseButtonDown(0))
-                            _weaponInput.InputAttackPressed();
+                            ActivateEventAttackPressed();
                         if (Input.GetMouseButtonUp(0))
-                            _weaponInput.InputAttackReleased();
+                            ActivateEventAttackReleased();
                     }
                     if (Input.GetKeyDown(KeyCode.R))
-                        _weaponInput.InputReload();
+                        ActivateEventReload();
                 }
             }
         }

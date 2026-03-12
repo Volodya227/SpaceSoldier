@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 namespace Player.Inputs
 {
     public abstract class PlayerInput : MonoBehaviour
@@ -15,11 +16,17 @@ namespace Player.Inputs
         public PlayerCameraViewInput CameraViewInput => _cameraViewInput;
         public PlayerWeaponInput GetWeaponInput => _weaponInput;
         public bool Active { get; private set; } = false;
+        protected EventSystem _eventSystem;
+        protected bool _dragMouse;
         protected void Awake()
         {
             SetUI(null);
             _cameraViewInput.EventChangeCameraView += SetViewToCharacter;
             SetActiveUIInput(true);//correctly set state
+        }
+        public void SetEventSystem(EventSystem eventSystem)
+        {
+            _eventSystem = eventSystem;
         }
         public void SetActiveUIInput(bool value)
         {
@@ -30,9 +37,17 @@ namespace Player.Inputs
             if (_isUI)
                 BindUI();
             _inputUI?.SetGameplayMode(_isUI);
+            ResetInput();
         }
-        private void OnDestroy()
+        private void ResetInput()
         {
+            _dragMouse = false;
+            _weaponInput?.InputAttackReleased();
+            _inputUI.Reset();
+        }
+        public void Dispose()
+        {
+            _eventSystem = null;
             _cameraViewInput.EventChangeCameraView -= SetViewToCharacter;
         }
         private void SetViewToCharacter()
@@ -75,17 +90,17 @@ namespace Player.Inputs
             _inputUI.EventAttackReleased -= ActivateEventAttackReleased;
             _inputUI.EventReloading -= ActivateEventReload;
         }
-        private void ActivateEventAttackPressed()
+        protected void ActivateEventAttackPressed()
         {
             if (_weaponInput.Active)
                 _weaponInput.InputAttackPressed();
         }
-        private void ActivateEventAttackReleased()
+        protected void ActivateEventAttackReleased()
         {
             if (_weaponInput.Active)
                 _weaponInput.InputAttackReleased();
         }
-        private void ActivateEventReload()
+        protected void ActivateEventReload()
         {
             if (_weaponInput.Active)
                 _weaponInput.InputReload();

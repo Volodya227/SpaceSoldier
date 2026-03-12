@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 namespace Systems.DI
 {
     public class BootstrapSceneGameplay : MonoBehaviour
@@ -14,6 +15,7 @@ namespace Systems.DI
         private UIGameplay.UISystem _UI;
         [SerializeField] private CameraView.CameraView _cameraViewPrefab;
         private CameraView.CameraView _cameraView;
+        [SerializeField] private EventSystem _eventSystem;
         private void Awake()
         {
             InitCharacters();
@@ -35,11 +37,11 @@ namespace Systems.DI
         private void InitInput()
         {
             //from Global Container
-            if (ServiceEntryPointReadonly.GlobalContainerSystems != null) {
+            if (ServiceEntryPointReadonly.GlobalContainerSystems != null)
                 _playerInput = ServiceEntryPointReadonly.GlobalContainerSystems.PlayerInput;
-                return;
-            }
-            _playerInput = Instantiate(_playerInputPrefab);
+            else
+                _playerInput = Instantiate(_playerInputPrefab);
+            _playerInput.SetEventSystem(_eventSystem);
         }
         private void InitCamera()
         {

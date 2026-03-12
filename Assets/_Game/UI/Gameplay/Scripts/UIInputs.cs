@@ -7,6 +7,7 @@ namespace UIGameplay.Inputs
         public event System.Action EventReloading;
         public float MoveX { get;}
         public float MoveZ { get; }
+        public void Reset();
         public void SetGameplayMode(bool active);
     }
     [System.Serializable]
@@ -58,6 +59,7 @@ namespace UIGameplay.Inputs
         public event System.Action EventReloading;
         public float MoveX => 0;
         public float MoveZ => 0;
+        public void Reset() { }
         public void SetGameplayMode(bool active) { }
     }
 }
