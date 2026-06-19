@@ -1,46 +1,35 @@
-SpaceSoldier — Modular FPS Prototype (Unity)
+Space Soldier — FPS Prototype (Unity)
+Прототип шутера для дослідження модульної архітектури ігрових систем на Unity.
+Гравець керує персонажем від першої або третьої особи з можливістю перемикання між кількома персонажами в сцені.
+Інпут повністю абстрагований — підтримуються Legacy Input, New Input System та Mobile UI joystick без змін в ігровій логіці.
+Зброя реалізована як MVP з raycast стрільбою, перезарядкою та muzzle flash. Архітектура побудована на Bootstrap-контейнері та event-driven ContainerData для UI.
 
-Custom FPS prototype focused on modular gameplay architecture and input abstraction.
-The project explores how gameplay systems can be structured independently from Unity-specific components.
-
-Core idea:
-Separate gameplay logic from engine infrastructure while keeping the project lightweight and framework-free.
-
-Architecture
-
-The project is organized into independent systems:
-
-Bootstrap — initializes global services and manages scene loading  
-Systems — gameplay orchestration (player, character, weapon)  
-Input Layer — abstraction over multiple input sources  
-UI Layer — gameplay state visualization  
-Camera — view control
-
-MonoBehaviour classes primarily act as adapters between Unity and the core systems.
-
-Input System
-
-Input handling is fully abstracted from gameplay logic.  
-Gameplay systems receive domain-specific input objects instead of raw Unity input.
-
-Supported input sources:
-- Unity Legacy Input
-- Unity Input System
-- Mobile UI joystick
-
-This allows switching input implementations without modifying gameplay systems.
-
+Архітектура
 Bootstrap
 
-A lightweight bootstrap container replaces heavy DI frameworks.
+Двошаровий контейнер без зовнішніх DI-фреймворків.
+Bootstrap — синглтон що живе між сценами та зберігає глобальні системи.
+BootstrapScene — локальний контейнер який ініціалізує системи конкретної сцени та отримує глобальні через ServiceEntryPointReadonly.
 
-Responsibilities:
-- initialize global services
-- manage scene transitions
-- expose shared systems through a global container
+Input Layer
 
-Tech
+PlayerInput — абстрактний клас з трьома незалежними каналами: CharacterInput, WeaponInput, CameraViewInput.
+PlayerInputOld (Legacy) та PlayerInputNew (New Input System) перемикаються без змін в ігровій логіці.
+Mobile UI joystick передає дані в той самий CharacterInput.
 
-Unity  
-C#  
-Custom lightweight bootstrap (no external DI frameworks)
+Character
+
+CharacterController — чиста C# логіка з CharacterMovement, CharacterRotation та CharacterAnimator.
+CharacterControllerBehaviour — MonoBehaviour адаптер що реалізує ITakeDamageable.
+
+UI
+
+Головне меню, екран завантаження з прогрес-баром, геймплейний HUD — здоров'я, патрони, перезарядка.
+Налаштування графіки (роздільна здатність, якість, fps) зберігаються між сесіями через Save систему.
+UI підписується на події ContainerData і не залежить від ігрової логіки напряму.
+
+Save
+
+ISaveProvider абстракція з JSON реалізацією. Зберігає налаштування застосунку між сесіями.
+Технології
+Unity, C#
