@@ -5,6 +5,14 @@ namespace Player.Inputs
     {
         private void Update()
         {
+            if (_playerInputToUI.Active)
+            {
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    _playerInputToUI.EventEscapeActivation();
+                    SetActiveUIMenu();
+                }
+            }
             if (Active)
             {
                 if (Input.GetKeyDown(KeyCode.L))

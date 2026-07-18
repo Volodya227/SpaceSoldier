@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 namespace UIGameplay.Inputs
 {
     public sealed class UIInputAdapter : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
@@ -23,6 +24,7 @@ namespace UIGameplay.Inputs
 
         private JoystickRole _joystick;
         private FireButtonRole _fire;
+        [SerializeField] private Button _buttonOpenMenu;
 
         public void Init(UIInputs inputs)
         {
@@ -42,11 +44,15 @@ namespace UIGameplay.Inputs
         private void Awake()
         {
             _uiCamera = _canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : _canvas.worldCamera;
+            if (_inputs != null)
+                _buttonOpenMenu.onClick.AddListener(_inputs.OpenMenu);
         }
         private void OnDestroy()
         {
             if(_inputs == null) return;
             _inputs.EventChangeActive -= SetActivate;
+            if (_inputs != null)
+                _buttonOpenMenu.onClick.RemoveListener(_inputs.OpenMenu);
         }
         public void OnPointerDown(PointerEventData e)
         {

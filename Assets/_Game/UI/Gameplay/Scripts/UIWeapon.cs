@@ -1,3 +1,4 @@
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
 namespace UIGameplay.WeaponViewData
@@ -48,6 +49,10 @@ namespace UIGameplay.WeaponViewData
         private void ChangeProjectileCountMax()
         {
             _ProjectileCountMaxValue.text = _state.ProjectileCountMax.ToString();
+        }
+        public void Dispose()
+        {
+            SetState(null);
         }
     }
 }

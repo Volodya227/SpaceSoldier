@@ -19,6 +19,7 @@ namespace Systems.DI
         }
         private LoaderScene _loaderScene;
         private static Bootstrap _instance;
+        public static GlobalContainerSystems Get => (_instance == null) ? null : _instance._globalContainerSystems;
         private GlobalContainerSystems _globalContainerSystems;
         private ApplicationSettings _settings;
         private Data.ApplicationData.ApplicationData _applicationData;

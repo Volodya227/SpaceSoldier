@@ -1,8 +1,8 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
+
 namespace Player.Inputs
 {
-    public abstract class PlayerInput : MonoBehaviour
+    public abstract class PlayerInput : UnityEngine.MonoBehaviour
     {
         public event System.Action EventChanageCharacter;
         protected bool _isUI = false;
@@ -10,21 +10,29 @@ namespace Player.Inputs
         protected readonly PlayerCharacterInput _characterInput = new();
         protected readonly PlayerCameraViewInput _cameraViewInput = new();
         protected readonly PlayerWeaponInput _weaponInput = new();
+        protected readonly PlayerInputToUI _playerInputToUI = new();
         protected UIGameplay.Inputs.IUIInputs _inputUI;
         private readonly UIGameplay.Inputs.UIInputsNullReference _inputUINullRef = new();
         public PlayerCharacterInput GetCharacterInput => _characterInput;
         public PlayerCameraViewInput CameraViewInput => _cameraViewInput;
         public PlayerWeaponInput GetWeaponInput => _weaponInput;
+        public PlayerInputToUI InputToUI => _playerInputToUI;
         public bool Active { get; private set; } = false;
-        protected EventSystem _eventSystem;
+        protected UnityEngine.EventSystems.EventSystem _eventSystem;
         protected bool _dragMouse;
         protected void Awake()
         {
             SetUI(null);
             _cameraViewInput.EventChangeCameraView += SetViewToCharacter;
+            _playerInputToUI.EventSetActiveUI += SetActiveUIMenu;
             SetActiveUIInput(true);//correctly set state
         }
-        public void SetEventSystem(EventSystem eventSystem)
+        private void OnDestroy()
+        {
+            _playerInputToUI.EventSetActiveUI += SetActiveUIMenu;
+            _cameraViewInput.EventChangeCameraView -= SetViewToCharacter;
+        }
+        public void SetEventSystem(UnityEngine.EventSystems.EventSystem eventSystem)
         {
             _eventSystem = eventSystem;
         }
@@ -44,11 +52,12 @@ namespace Player.Inputs
             _dragMouse = false;
             _weaponInput?.InputAttackReleased();
             _inputUI.Reset();
+            SetViewToCharacter();
         }
         public void Dispose()
         {
             _eventSystem = null;
-            _cameraViewInput.EventChangeCameraView -= SetViewToCharacter;
+            SetActiveUIInput(false);
         }
         private void SetViewToCharacter()
         {
@@ -57,6 +66,10 @@ namespace Player.Inputs
         public void SetActive(bool value)
         {
             Active = value;
+            if(Active)
+                _cameraViewInput.SetMouseLockMode(!_isUI);
+            else
+                _cameraViewInput.SetMouseLockMode(false);
         }
         public void SetUI(UIGameplay.Inputs.IUIInputs inputUI)
         {
@@ -81,6 +94,7 @@ namespace Player.Inputs
             _inputUI.EventAttackPressed += ActivateEventAttackPressed;
             _inputUI.EventAttackReleased += ActivateEventAttackReleased;
             _inputUI.EventReloading += ActivateEventReload;
+            _inputUI.EventOpenMenu += OpenMenu;
         }
         private void UnbindUI()
         {
@@ -89,6 +103,7 @@ namespace Player.Inputs
             _inputUI.EventAttackPressed -= ActivateEventAttackPressed;
             _inputUI.EventAttackReleased -= ActivateEventAttackReleased;
             _inputUI.EventReloading -= ActivateEventReload;
+            _inputUI.EventOpenMenu -= OpenMenu;
         }
         protected void ActivateEventAttackPressed()
         {
@@ -104,6 +119,23 @@ namespace Player.Inputs
         {
             if (_weaponInput.Active)
                 _weaponInput.InputReload();
+        }
+        protected void SetActiveUIMenu()
+        {
+            if (_playerInputToUI.EventAskActiveUIActivation())
+            {
+                //ChangeCameraDrag();
+                SetActive(false);
+            }
+            else
+            {
+                SetActive(true);
+            }
+        }
+        protected void OpenMenu()
+        {
+            _playerInputToUI.EventEscapeActivation();
+            SetActiveUIMenu();
         }
     }
 }

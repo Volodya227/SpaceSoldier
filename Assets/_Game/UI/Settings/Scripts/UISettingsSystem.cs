@@ -12,7 +12,10 @@ namespace Systems.UI.Settings
         [SerializeField] private Button _buttonGraphics;
         [SerializeField] private Button _buttonInput;
         [SerializeField] private Button _buttonExit;
-        private void SetActive(bool value) {
+        public bool Active { get; private set; }
+        private void SetActive(bool value)
+        {
+            Active = value;
             _panel.gameObject.SetActive(value);
         }
         private void Awake()
@@ -27,13 +30,9 @@ namespace Systems.UI.Settings
         public void Init()
         {
             if (_dataApplication != null)
-            {
                 _graphics.Init(_dataApplication.GetGraphicsSetter);
-            }
             else
-            {
                 _graphics.Init();
-            }
             Open();
         }
         private void OnDestroy()
@@ -53,7 +52,7 @@ namespace Systems.UI.Settings
             _input.SetActive(false);
             _graphics.SetActive(false);
         }
-        private void CloseSettings()
+        public void CloseSettings()
         {
             Close();
             SetActive(false);

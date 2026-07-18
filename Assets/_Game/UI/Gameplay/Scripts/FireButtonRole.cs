@@ -1,57 +1,58 @@
-using UIGameplay.Inputs;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
-internal sealed class FireButtonRole
+namespace UIGameplay.Inputs
 {
-    private readonly RectTransform _button;
-    private readonly UIInputs _inputs;
-    private readonly Camera _uiCamera;
-    private bool _pressed;
-    public FireButtonRole(RectTransform button, UIInputs inputs, Camera uiCamera)
+    internal sealed class FireButtonRole
     {
-        _button = button;
-        _inputs = inputs;
-        _uiCamera = uiCamera;
-    }
+        private readonly RectTransform _button;
+        private readonly UIInputs _inputs;
+        private readonly Camera _uiCamera;
+        private bool _pressed;
+        public FireButtonRole(RectTransform button, UIInputs inputs, Camera uiCamera)
+        {
+            _button = button;
+            _inputs = inputs;
+            _uiCamera = uiCamera;
+        }
 
-    public bool IsTarget(PointerEventData e)
-    {
-        return RectTransformUtility.RectangleContainsScreenPoint(_button, e.position, _uiCamera);
+        public bool IsTarget(PointerEventData e)
+        {
+            return RectTransformUtility.RectangleContainsScreenPoint(_button, e.position, _uiCamera);
+        }
+        public void OnPointerDown(PointerEventData e)
+        {
+            if (_pressed)
+                return;
+            _pressed = true;
+            _inputs.SignalAttackPressed();
+        }
+        public void OnPointerUp(PointerEventData e)
+        {
+            if (!_pressed)
+                return;
+            _pressed = false;
+            _inputs.SignalAttackReleased();
+        }
     }
-    public void OnPointerDown(PointerEventData e)
+    internal sealed class ReloadButtonRole
     {
-        if (_pressed)
-            return;
-        _pressed = true;
-        _inputs.SignalAttackPressed();
-    }
-    public void OnPointerUp(PointerEventData e)
-    {
-        if (!_pressed)
-            return;
-        _pressed = false;
-        _inputs.SignalAttackReleased();
-    }
-}
-internal sealed class ReloadButtonRole
-{
-    private readonly RectTransform _button;
-    private readonly UIInputs _inputs;
-    private readonly Camera _uiCamera;
-    public ReloadButtonRole(RectTransform button, UIInputs inputs, Camera uiCamera)
-    {
-        _button = button;
-        _inputs = inputs;
-        _uiCamera = uiCamera;
-    }
-    public bool IsTarget(PointerEventData e)
-    {
-        return RectTransformUtility.RectangleContainsScreenPoint(
-            _button, e.position, _uiCamera);
-    }
-    public void OnPointerDown(PointerEventData e)
-    {
-        _inputs.SignalReloading();
+        private readonly RectTransform _button;
+        private readonly UIInputs _inputs;
+        private readonly Camera _uiCamera;
+        public ReloadButtonRole(RectTransform button, UIInputs inputs, Camera uiCamera)
+        {
+            _button = button;
+            _inputs = inputs;
+            _uiCamera = uiCamera;
+        }
+        public bool IsTarget(PointerEventData e)
+        {
+            return RectTransformUtility.RectangleContainsScreenPoint(
+                _button, e.position, _uiCamera);
+        }
+        public void OnPointerDown(PointerEventData e)
+        {
+            _inputs.SignalReloading();
+        }
     }
 }

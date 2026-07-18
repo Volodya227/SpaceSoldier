@@ -16,13 +16,22 @@ namespace Systems.DI
         [SerializeField] private CameraView.CameraView _cameraViewPrefab;
         private CameraView.CameraView _cameraView;
         [SerializeField] private EventSystem _eventSystem;
+        private IBootstrapEvents _bootstrapEvents;
         private void Awake()
         {
+            if(Bootstrap.Get != null)
+            {
+                _bootstrapEvents = Bootstrap.Get.BootstrapEvents;
+            }
             InitCharacters();
             InitUI();
             InitInput();
             InitCamera();
             InitPlayerSystem();
+        }
+        private void OnDestroy()
+        {
+            
         }
         private void InitCharacters()
         {
@@ -52,6 +61,11 @@ namespace Systems.DI
             _playerSystem = Instantiate(_playerSystemPrefab);
             _playerSystem.Init(_playerInput, _characterSystem, _UI, _cameraView);
             _playerSystem.enabled = true;
+        }
+        private void ReturnTOMainMenu()
+        {
+            if (_bootstrapEvents == null) return;
+            _bootstrapEvents.ActivateEventLoadScene(1);
         }
     }
 }

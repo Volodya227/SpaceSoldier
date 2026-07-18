@@ -12,6 +12,7 @@ namespace Player
             _cameraView = cameraView;
             _cameraView.SetInput(_input.CameraViewInput);
             _systemUI = systemUI;
+            _systemUI.SetInput(_input.InputToUI);
         }
         public void Dispose()
         {

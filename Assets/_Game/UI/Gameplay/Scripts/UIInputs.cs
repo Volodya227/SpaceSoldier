@@ -2,6 +2,7 @@ namespace UIGameplay.Inputs
 {
     public interface IUIInputs
     {
+        public event System.Action EventOpenMenu;
         public event System.Action EventAttackPressed;
         public event System.Action EventAttackReleased;
         public event System.Action EventReloading;
@@ -13,6 +14,7 @@ namespace UIGameplay.Inputs
     [System.Serializable]
     public sealed class UIInputs : IUIInputs
     {
+        public event System.Action EventOpenMenu;
         public event System.Action EventChangeActive;
         public event System.Action EventAttackPressed;
         public event System.Action EventAttackReleased;
@@ -51,9 +53,14 @@ namespace UIGameplay.Inputs
             Active = active;
             EventChangeActive?.Invoke();
         }
+        public void OpenMenu()
+        {
+            EventOpenMenu.Invoke();
+        }
     }
     public class UIInputsNullReference : IUIInputs
     {
+        public event System.Action EventOpenMenu;
         public event System.Action EventAttackPressed;
         public event System.Action EventAttackReleased;
         public event System.Action EventReloading;

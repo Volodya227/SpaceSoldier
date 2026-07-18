@@ -30,5 +30,9 @@ namespace UIGameplay.CharacterViewData
             float value = _state.HealthState.Health;
             HealthValue.text = value.ToString();
         }
+        public void Dispose()
+        {
+            SetState(null);
+        }
     }
 }
