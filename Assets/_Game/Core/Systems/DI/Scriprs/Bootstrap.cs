@@ -13,10 +13,6 @@ namespace Systems.DI
     */
     public class Bootstrap : MonoBehaviour
     {
-        private class ServiceEntryPoint : ServiceEntryPointReadonly
-        {
-            public static void SetGlobalContainerSystems(GlobalContainerSystems globalContainerSystems) { GlobalContainerSystems = globalContainerSystems; }
-        }
         private LoaderScene _loaderScene;
         private static Bootstrap _instance;
         public static GlobalContainerSystems Get => (_instance == null) ? null : _instance._globalContainerSystems;
@@ -57,7 +53,7 @@ namespace Systems.DI
             _playerInput = Instantiate(_playerInputPrefab, parent: transform);
             //Register global systems
             _globalContainerSystems = new GlobalContainerSystems(_playerInput, _applicationData, _bootstrapEvents);
-            ServiceEntryPoint.SetGlobalContainerSystems(_globalContainerSystems);
+            //ServiceEntryPoint.SetGlobalContainerSystems(_globalContainerSystems);
             LoadSceneAsync(1);// go to main menu
         }
         private void OnDestroy()

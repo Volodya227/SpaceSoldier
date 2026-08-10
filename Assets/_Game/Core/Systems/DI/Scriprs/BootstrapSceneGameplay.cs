@@ -31,7 +31,7 @@ namespace Systems.DI
         }
         private void OnDestroy()
         {
-            
+            _UI.GetMenuEvents.EventExitScene += ReturnTOMainMenu;
         }
         private void InitCharacters()
         {
@@ -42,12 +42,14 @@ namespace Systems.DI
         private void InitUI()
         {
             _UI = Instantiate(_UIPrefab);
+            _UI.Init(Bootstrap.Get?.ApplicationData);
+            _UI.GetMenuEvents.EventExitScene += ReturnTOMainMenu;
         }
         private void InitInput()
         {
             //from Global Container
-            if (ServiceEntryPointReadonly.GlobalContainerSystems != null)
-                _playerInput = ServiceEntryPointReadonly.GlobalContainerSystems.PlayerInput;
+            if (Bootstrap.Get != null)
+                _playerInput = Bootstrap.Get.PlayerInput;
             else
                 _playerInput = Instantiate(_playerInputPrefab);
             _playerInput.SetEventSystem(_eventSystem);

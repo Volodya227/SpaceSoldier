@@ -8,8 +8,15 @@ namespace Systems.DI
         [SerializeField] private UI.Settings.UISettingsSystem _settingsSystemPrefab;
         private UI.Settings.UISettingsSystem _settingsSystem = null;
         private UI.MainMenu.IMainMenuActions _menuActions;
+        private IBootstrapEvents _bootstrapEvents;
+        private Data.ApplicationData.IApplicationData _applicationData;
         private void Awake()
         {
+            if(Bootstrap.Get != null)
+            {
+                _bootstrapEvents = Bootstrap.Get.BootstrapEvents;
+                _applicationData = Bootstrap.Get.ApplicationData;
+            }
             _mainMenuSystem = Instantiate(_mainMenuSystemPrefab);
             _menuActions = _mainMenuSystem.GetEvents;
             _menuActions.EventOnClickPlay += Play;
@@ -28,17 +35,17 @@ namespace Systems.DI
         }
         private void Play()
         {
-            if (ServiceEntryPointReadonly.GlobalContainerSystems == null) return;
-            ServiceEntryPointReadonly.GlobalContainerSystems.BootstrapEvents.ActivateEventLoadScene(2);
+            if (_bootstrapEvents == null) return;
+            _bootstrapEvents.ActivateEventLoadScene(2);
         }
         private void OpenSettings()
         {
             if (_settingsSystem == null)
             {
                 _settingsSystem = Instantiate(_settingsSystemPrefab);
-                if (ServiceEntryPointReadonly.GlobalContainerSystems != null)
+                if (_applicationData != null)
                 {
-                    _settingsSystem.SetData(ServiceEntryPointReadonly.GlobalContainerSystems.ApplicationData);
+                    _settingsSystem.SetData(_applicationData);
                 }
                 _settingsSystem.Init();
                 _settingsSystem.EventDisable += OpenMainMenu;
@@ -52,12 +59,12 @@ namespace Systems.DI
         }
         private void Quit()
         {
-            if (ServiceEntryPointReadonly.GlobalContainerSystems == null)
+            if (_bootstrapEvents == null)
             {
                 Application.Quit();
                 return;
             }
-            ServiceEntryPointReadonly.GlobalContainerSystems.BootstrapEvents.ActivateEventQuitApplication();
+            _bootstrapEvents.ActivateEventQuitApplication();
         }
     }
 }

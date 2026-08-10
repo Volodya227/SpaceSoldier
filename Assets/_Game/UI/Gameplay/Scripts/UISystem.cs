@@ -23,7 +23,6 @@ namespace UIGameplay
             _inputAdapterUI.Init(_inputUI);
             _weaponUI.SetState(null);
             _characterUI.SetState(null);
-            _menuUI.Init(_applicationData);
         }
         private void Update()
         {
@@ -32,6 +31,7 @@ namespace UIGameplay
         public void Init(Data.ApplicationData.IApplicationData applicationData = null)
         {
             _applicationData = applicationData;
+            _menuUI.Init(_applicationData);
         }
         private void OnDestroy()
         {
